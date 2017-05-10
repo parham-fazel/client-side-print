@@ -20,12 +20,15 @@
 </head>
 <body>
 <div id="main">
-    <div class="ol-print ol-unselectable ol-control" style="z-index: 2;left: 7px;">
-    <button type="button"  data-toggle="modal" data-target="#printModal">
-        <i class="fa fa-print"></i>
-    </button>
+    <div id="map" class="map">
+        <div id="olCustomControls">
+            <div class="ol-print ol-unselectable ol-control" id="printControl" style="z-index: 2;left: 7px;">
+                <button type="button" data-toggle="modal" data-target="#printModal">
+                    <i class="fa fa-print"></i>
+                </button>
+            </div>
+        </div>
     </div>
-    <div id="map" class="map"></div>
 </div>
 
 <div class="modal fade" tabindex="-1" role="dialog" id="printModal">
@@ -47,6 +50,13 @@
                             <option value="a3">A3</option>
                             <option value="a4" selected>A4</option>
                             <option value="a5">A5 (fast)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Orientation</label>
+                        <select class="form-control" id="orientation">
+                            <option value="landscape">landscape</option>
+                            <option value="portrait">portrait</option>
                         </select>
                     </div>
                     <div class="form-group">
