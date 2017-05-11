@@ -10,6 +10,9 @@ This way I can provide a pdf version of the map that can printed easily.
 
 Overall we can support all of our required browsers.
 
+Demo:
+<a href="https://rawcdn.githack.com/parham-fazel/client-side-print/master/export-pdf.html">https://rawcdn.githack.com/parham-fazel/client-side-print/master/export-pdf.html</a>
+
 Here is the official example provided by Openlayers.[<span style="color: rgb(51,51,51);">
 </span>http://openlayers.org/en/latest/examples/export-pdf.html
 ](http://openlayers.org/en/latest/examples/export-pdf.html)[http://rawgit.com/MrRio/jsPDF/master](http://rawgit.com/MrRio/jsPDF/master/)
