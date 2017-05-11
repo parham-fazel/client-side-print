@@ -87,8 +87,9 @@
 		pdf.addImage(data, 'JPEG', 0, 0, pc.dim[0], pc.dim[1]);
 		if(auto) {
 			pdf.autoPrint();
+		} else {
+			pdf.save('map.pdf');
 		}
-		pdf.save('map.pdf');
 	}
 	
 	function tileLoadStart() {
@@ -173,6 +174,7 @@
 	
 	function onTilesLoadDone(map, size, extent, auto) {
 		var exportButton = document.getElementById('exportPDF');
+		var printPreviewButton = document.getElementById('printPreview');
 		window.setTimeout(function () {
 			loading = 0;
 			loaded = 0;
@@ -180,6 +182,7 @@
 			removeTileLoadeventListeners(raster);
 			resetMapSize(map, size, extent);
 			exportButton.disabled = false;
+			printPreviewButton.disabled = false;
 			document.body.style.cursor = 'auto';
 		}, 100);
 	}
