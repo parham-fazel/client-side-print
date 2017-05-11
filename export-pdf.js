@@ -59,7 +59,7 @@
 		addVectorData(map);
 		addTouchCalss();
 		initExportOnClick(map);
-		initPrintPreviewOnClick(map);
+		// initPrintPreviewOnClick(map);
 		addTileLoadEventListeners(map, raster);
 		map.once('postcompose', function (event) {
 			canvas = event.context.canvas;
@@ -80,16 +80,12 @@
 		return canvas.toDataURL('image/png');
 	}
 	
-	function createPDF(auto) {
+	function createPDF() {
 		var pc = printConfigs();
 		var data = exportMapImage();
 		var pdf = new jsPDF(pc.orientation, undefined, pc.format);
 		pdf.addImage(data, 'JPEG', 0, 0, pc.dim[0], pc.dim[1]);
-		if(auto) {
-			pdf.autoPrint();
-		} else {
-			pdf.save('map.pdf');
-		}
+		pdf.save('map.pdf');
 	}
 	
 	function tileLoadStart() {
@@ -172,9 +168,8 @@
 		map.renderSync();
 	}
 	
-	function onTilesLoadDone(map, size, extent, auto) {
+	function pdfOnTilesLoadDone(map, size, extent, auto) {
 		var exportButton = document.getElementById('exportPDF');
-		var printPreviewButton = document.getElementById('printPreview');
 		window.setTimeout(function () {
 			loading = 0;
 			loaded = 0;
@@ -182,20 +177,33 @@
 			removeTileLoadeventListeners(raster);
 			resetMapSize(map, size, extent);
 			exportButton.disabled = false;
-			printPreviewButton.disabled = false;
 			document.body.style.cursor = 'auto';
 		}, 100);
 	}
 	
+	function previewOnTilesLoadDone(map, size, extent, auto) {
+		var printPreviewButton = document.getElementById('printPreview');
+		window.print();
+		window.setTimeout(function () {
+			loading = 0;
+			loaded = 0;
+			removeTileLoadeventListeners(raster);
+			resetMapSize(map, size, extent);
+			printPreviewButton.disabled = false;
+			document.body.style.cursor = 'auto';
+		}, 1000);
+	}
+	
 	function listenToTileLoad(auto) {
+		var doneFn = auto?previewOnTilesLoadDone:pdfOnTilesLoadDone;
 		if (loading === loaded) {
-			return onTilesLoadDone(map, originalMapSize, originalMapExtent, auto);
+			return doneFn(map, originalMapSize, originalMapExtent);
 		}
 		var interval = setInterval(function () {
 			if (loading === loaded) {
 				clearInterval(interval);
 				interval = undefined;
-				return onTilesLoadDone(map, originalMapSize, originalMapExtent, auto);
+				return doneFn(map, originalMapSize, originalMapExtent);
 			}
 		}, 1000)
 	}
