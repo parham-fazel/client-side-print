@@ -59,6 +59,7 @@
 		addVectorData(map);
 		addTouchCalss();
 		initExportOnClick(map);
+		// initPrintPreviewOnClick(map);
 		addTileLoadEventListeners(map, raster);
 		map.once('postcompose', function (event) {
 			canvas = event.context.canvas;
@@ -108,9 +109,16 @@
 	}
 	
 	function initExportOnClick(map) {
-		var exportButton = document.getElementById('export-pdf');
+		var exportButton = document.getElementById('exportPDF');
 		exportButton.addEventListener('click', function (event) {
 			exportOnClick(map);
+		}, false);
+	}
+	
+	function initPrintPreviewOnClick(map) {
+		var printPreviewButton = document.getElementById('printPreview');
+		printPreviewButton.addEventListener('click', function (event) {
+			printPreviewOnClick(map);
 		}, false);
 	}
 	
@@ -123,7 +131,7 @@
 	}
 	
 	function exportOnClick(map) {
-		var exportButton = document.getElementById('export-pdf');
+		var exportButton = document.getElementById('exportPDF');
 		var pc = printConfigs();
 		var width = Math.round(pc.dim[0] * pc.resolution / 25.4);
 		var height = Math.round(pc.dim[1] * pc.resolution / 25.4);
@@ -132,7 +140,20 @@
 		exportButton.disabled = true;
 		document.body.style.cursor = 'progress';
 		updateMapSizeForPrint(map, width, height, originalMapExtent);
-		listenToTileLoad();
+		listenToTileLoad(false);
+	}
+	
+	function printPreviewOnClick(map) {
+		var printPreviewButton = document.getElementById('printPreview');
+		var pc = printConfigs();
+		var width = Math.round(pc.dim[0] * pc.resolution / 25.4);
+		var height = Math.round(pc.dim[1] * pc.resolution / 25.4);
+		originalMapSize = /** @type {ol.Size} */ (map.getSize());
+		originalMapExtent = map.getView().calculateExtent(originalMapSize);
+		printPreviewButton.disabled = true;
+		document.body.style.cursor = 'progress';
+		updateMapSizeForPrint(map, width, height, originalMapExtent);
+		listenToTileLoad(true);
 	}
 	
 	function updateMapSizeForPrint(map, width, height, extent) {
@@ -147,12 +168,12 @@
 		map.renderSync();
 	}
 	
-	function onTilesLoadDone(map, size, extent) {
-		var exportButton = document.getElementById('export-pdf');
+	function pdfOnTilesLoadDone(map, size, extent, auto) {
+		var exportButton = document.getElementById('exportPDF');
 		window.setTimeout(function () {
 			loading = 0;
 			loaded = 0;
-			createPDF();
+			createPDF(auto);
 			removeTileLoadeventListeners(raster);
 			resetMapSize(map, size, extent);
 			exportButton.disabled = false;
@@ -160,15 +181,29 @@
 		}, 100);
 	}
 	
-	function listenToTileLoad() {
+	function previewOnTilesLoadDone(map, size, extent, auto) {
+		var printPreviewButton = document.getElementById('printPreview');
+		window.print();
+		window.setTimeout(function () {
+			loading = 0;
+			loaded = 0;
+			removeTileLoadeventListeners(raster);
+			resetMapSize(map, size, extent);
+			printPreviewButton.disabled = false;
+			document.body.style.cursor = 'auto';
+		}, 1000);
+	}
+	
+	function listenToTileLoad(auto) {
+		var doneFn = auto?previewOnTilesLoadDone:pdfOnTilesLoadDone;
 		if (loading === loaded) {
-			return onTilesLoadDone(map, originalMapSize, originalMapExtent);
+			return doneFn(map, originalMapSize, originalMapExtent);
 		}
 		var interval = setInterval(function () {
 			if (loading === loaded) {
 				clearInterval(interval);
 				interval = undefined;
-				return onTilesLoadDone(map, originalMapSize, originalMapExtent);
+				return doneFn(map, originalMapSize, originalMapExtent);
 			}
 		}, 1000)
 	}
