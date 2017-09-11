@@ -1,0 +1,24 @@
+.map {
+    flex: 1;
+}
+
+#main {
+    display: flex;
+    flex-direction: column;
+}
+
+body, html, #main {
+    height: 100%;
+}
+
+.form {
+    padding: 10px;
+}
+
+.ol-print {
+    top: 5em;
+}
+
+.ol-touch .ol-print {
+    top: 5.3em;
+}

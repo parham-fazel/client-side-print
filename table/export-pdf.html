@@ -1,0 +1,82 @@
+<!doctype html>
+<html>
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="export-pdf.css">
+    <link rel="stylesheet" href="https://openlayers.org/en/v4.1.1/css/ol.css" type="text/css">
+    <!-- The line below is only needed for old environments like Internet Explorer and Android 4.x -->
+    <script src="https://cdn.polyfill.io/v2/polyfill.min.js?features=requestAnimationFrame,Element.prototype.classList,URL"></script>
+    <script src="https://openlayers.org/en/v4.1.1/build/ol.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.2.61/jspdf.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js" type="text/javascript"
+            charset="utf-8"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"/>
+    <title>MAP PRINT</title>
+</head>
+<body class="landscape">
+<div id="main">
+    <div id="map" class="map">
+        <div id="olCustomControls">
+            <div class="ol-print ol-unselectable ol-control" id="printControl" style="z-index: 2;left: 7px;">
+                <button type="button" data-toggle="modal" data-target="#printModal">
+                    <i class="fa fa-print"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" tabindex="-1" role="dialog" id="printModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                        aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title">Print properties</h4>
+            </div>
+            <div class="modal-body">
+                <form class="form">
+                    <div class="form-group">
+                        <label>Page size</label>
+                        <select class="form-control" id="format">
+                            <option value="a0">A0 (slow)</option>
+                            <option value="a1">A1</option>
+                            <option value="a2">A2</option>
+                            <option value="a3">A3</option>
+                            <option value="a4" selected>A4</option>
+                            <option value="a5">A5 (fast)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Orientation</label>
+                        <select class="form-control" id="orientation">
+                            <option value="landscape">landscape</option>
+                            <option value="portrait">portrait</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Resolution </label>
+                        <select class="form-control" id="resolution">
+                            <option value="72">72 dpi (fast)</option>
+                            <option value="150">150 dpi</option>
+                            <option value="300">300 dpi (slow)</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button class="btn btn-primary" id="exportPDF">Export PDF</button>
+                <!--<button class="btn btn-primary" id="printPreview">Print preview</button>-->
+            </div>
+        </div>
+    </div>
+</div>
+<script src="export-pdf.js"></script>
+</body>
+</html>
